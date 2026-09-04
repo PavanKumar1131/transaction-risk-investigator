@@ -4,231 +4,417 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transaction Risk Investigation Assistant · PS06</title>
-  <meta name="description" content="AI-augmented fraud desk investigation assistant powered by deterministic risk rules and grounded Gemini reporting.">
+  <meta name="description" content="AI-Augmented Fraud Desk Decision-Support Platform with Deterministic Detection and Grounded Gemini Reporting.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <div class="app-layout">
-    <!-- Top Navigation Bar -->
-    <header class="navbar">
-      <div class="nav-brand">
-        <div class="track-badge">PS06</div>
-        <div class="brand-titles">
-          <h1>Transaction Risk Investigation Assistant</h1>
-          <p class="brand-sub">Fraud Desk Decision-Support &amp; Deterministic Rule Engine</p>
+<body class="theme-dark">
+  <!-- Top Ambient Glow -->
+  <div class="ambient-glow"></div>
+
+  <div class="app-wrapper">
+    <!-- Platform Cockpit Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-badge-container">
+          <span class="track-code">PS06</span>
+          <span class="version-tag">v1.0-PROD</span>
+        </div>
+        <div class="brand-info">
+          <div class="brand-title-row">
+            <h1>Transaction Risk Investigation Assistant</h1>
+            <span class="ai-pill">
+              <svg class="icon-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+              </svg>
+              AI Copilot
+            </span>
+          </div>
+          <p class="brand-tagline">Tier-1 Fraud Desk Decision Support &bull; Deterministic Risk Engine &bull; Grounded Gemini Reporting</p>
         </div>
       </div>
-      <div class="nav-controls">
-        <div id="backend-status" class="status-chip loading">
-          <span class="pulse-dot"></span>
-          <span class="chip-text">Checking Service...</span>
+
+      <div class="header-telemetry">
+        <div class="telemetry-item" id="connection-status">
+          <span class="pulse-ring"></span>
+          <span class="pulse-core"></span>
+          <span class="telemetry-label" id="backend-status-text">Connecting...</span>
         </div>
-        <div class="model-badge" id="active-model-chip">
-          <span class="chip-icon">&bull;</span>
-          <span id="model-name-display">gemini-3.5-flash-lite</span>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item model-telemetry">
+          <svg class="telemetry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10M7 12h10M7 17h10"/>
+          </svg>
+          <span class="telemetry-model code-font" id="model-display">gemini-3.5-flash-lite</span>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="traceability-tag" title="Every transaction cited is mathematically verified in input dataset">
+          <svg class="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+          </svg>
+          <span>Traceability Guaranteed</span>
         </div>
       </div>
     </header>
 
-    <!-- Main Workspace -->
-    <main class="workspace">
-      <!-- Investigation Control Bar -->
-      <section class="control-panel card">
-        <div class="panel-left">
-          <div class="input-group">
-            <label for="customer-select">Select Customer Account</label>
-            <div class="select-container">
-              <select id="customer-select">
-                <option value="">Loading customer records...</option>
-              </select>
+    <!-- Main Investigation Stage -->
+    <main class="main-stage">
+      
+      <!-- Control Command Center -->
+      <section class="command-center glass-panel">
+        <div class="command-left">
+          <div class="control-label-row">
+            <label for="customer-select" class="control-label">Customer Account Dossier</label>
+            <span class="control-hint">Select a profile to load audit trail</span>
+          </div>
+          <div class="select-wrapper-custom">
+            <div class="select-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
             </div>
+            <select id="customer-select" disabled>
+              <option value="">Loading accounts from repository database...</option>
+            </select>
           </div>
         </div>
-        <div class="panel-right">
-          <button id="run-btn" class="btn btn-primary" disabled>
-            <span class="btn-icon">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-              </svg>
-            </span>
-            <span id="run-btn-text">Run Investigation</span>
+
+        <div class="command-right">
+          <button id="run-btn" class="btn btn-investigate" disabled>
+            <span class="btn-glow"></span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <span id="run-btn-text">Run Risk Investigation</span>
           </button>
         </div>
       </section>
 
-      <!-- Customer Profile Summary Header (shows after customer selected) -->
-      <section id="customer-profile-banner" class="customer-banner card hidden">
-        <div class="profile-header">
-          <div class="profile-avatar" id="avatar-initials">PS</div>
-          <div class="profile-meta">
-            <h2 id="cust-name">Customer Name</h2>
-            <div class="meta-tags">
-              <span class="tag code-font" id="cust-id">CUST_101</span>
-              <span class="tag code-font" id="cust-acc">ACC-90812341</span>
-              <span class="tag" id="cust-tx-count">25 Transactions</span>
-              <span class="tag risk-tag" id="cust-risk-tag">Low Risk Profile</span>
-            </div>
-          </div>
+      <!-- Quick-Demo Jump Bar for Evaluators -->
+      <div class="quick-jump-bar">
+        <span class="quick-jump-label">Demo Shortcuts:</span>
+        <div class="quick-jump-chips" id="quick-jump-container">
+          <!-- Populated by JS for 1-click test scenarios -->
         </div>
-        <p class="profile-notes" id="cust-notes">Account description and notes will appear here.</p>
-      </section>
-
-      <!-- Loading State Overlay -->
-      <div id="loading-spinner" class="loading-container hidden">
-        <div class="spinner"></div>
-        <p class="loading-title">Running Deterministic Rule Engine &amp; Synthesizing Grounded Report...</p>
-        <p class="loading-desc">Calculating customer baseline &bull; Evaluating Rules 1–4 &bull; Consulting Gemini</p>
       </div>
 
-      <!-- Investigation Report Container -->
-      <section id="investigation-results" class="results-area hidden">
-        
-        <!-- Hero Decision Status Card -->
-        <div id="status-card" class="status-hero clean">
-          <div class="status-hero-icon" id="status-icon">
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
+      <!-- Customer Profile Spotlight Card (shown after customer selected) -->
+      <section id="customer-dossier" class="dossier-card glass-panel hidden">
+        <div class="dossier-top">
+          <div class="dossier-avatar-col">
+            <div class="avatar-ring" id="dossier-avatar">PS</div>
           </div>
-          <div class="status-hero-content">
-            <div class="status-tagline">INVESTIGATION DETERMINATION</div>
-            <h2 id="status-headline">STATUS: NO IMMEDIATE ATTENTION REQUIRED</h2>
-            <p id="status-subtext">No configured risk rules were triggered. All reviewed transactions align with established baseline.</p>
-          </div>
-          <div class="status-hero-badge" id="traceability-chip">
-            <span class="verify-icon">&check;</span> Traceability Verified
-          </div>
-        </div>
-
-        <!-- Baseline Statistics Metrics Grid -->
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <span class="metric-label">Historical Median Debit</span>
-            <span class="metric-val currency" id="stat-median">INR 0.00</span>
-            <span class="metric-sub">Customer-specific baseline</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Dominant Channel</span>
-            <span class="metric-val code-font" id="stat-channel">CARD_POS</span>
-            <span class="metric-sub" id="stat-channel-pct">88.5% of total volume</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Typical Active Hours</span>
-            <span class="metric-val" id="stat-hours">07:00–22:00</span>
-            <span class="metric-sub" id="stat-hours-desc">Standard daytime activity</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Flagged Transactions</span>
-            <span class="metric-val" id="stat-flagged-count">0 / 25</span>
-            <span class="metric-sub" id="stat-rules-triggered">0 Rules Triggered</span>
-          </div>
-        </div>
-
-        <!-- Structured Risk Findings Section (Only shown when rules trigger) -->
-        <div id="findings-section" class="findings-container">
-          <div class="section-title-bar">
-            <h3>Structured Risk Findings</h3>
-            <span class="badge" id="findings-badge">0 Findings</span>
-          </div>
-          <div id="findings-list" class="findings-list">
-            <!-- Dynamic Finding Cards inserted by JS -->
-          </div>
-        </div>
-
-        <!-- Gemini Investigator Narrative Report Section -->
-        <div class="card narrative-card">
-          <div class="narrative-header">
-            <div class="narrative-header-left">
-              <span class="ai-sparkle">&#10024;</span>
-              <h3>Grounded Investigator Narrative Report</h3>
+          <div class="dossier-content-col">
+            <div class="dossier-identity-row">
+              <h2 id="dossier-name" class="dossier-name">Customer Name</h2>
+              <div class="badge-row">
+                <span class="chip chip-id code-font" id="dossier-id">CUST_101</span>
+                <span class="chip chip-acc code-font" id="dossier-acc">ACC-00000000</span>
+                <span class="chip chip-count" id="dossier-count">0 Transactions</span>
+                <span class="chip chip-risk" id="dossier-risk">LOW Risk</span>
+              </div>
             </div>
-            <div class="narrative-meta">
-              <span class="badge badge-subtle" id="narrative-model-badge">gemini-3.5-flash-lite</span>
-              <span class="badge badge-verified" id="grounding-badge">Evidence-Grounded Only</span>
+            <p class="dossier-notes" id="dossier-notes">Account description and historical profile remarks.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Progress / Engine Running State -->
+      <div id="engine-loader" class="engine-loader glass-panel hidden">
+        <div class="radar-scan">
+          <div class="radar-circle circle-1"></div>
+          <div class="radar-circle circle-2"></div>
+          <div class="radar-circle circle-3"></div>
+          <div class="radar-sweep"></div>
+        </div>
+        <div class="loader-content">
+          <h3 class="loader-title">Executing Deterministic Risk Engine</h3>
+          <p class="loader-sub">Auditing historical median debit &bull; Scanning 4 risk rules &bull; Synthesizing grounded Gemini narrative</p>
+          <div class="loader-steps">
+            <span class="step-chip active">1. Calculate Baseline</span>
+            <span class="step-arrow">&rarr;</span>
+            <span class="step-chip active">2. Evaluate Rules</span>
+            <span class="step-arrow">&rarr;</span>
+            <span class="step-chip active">3. Verify Traceability</span>
+            <span class="step-arrow">&rarr;</span>
+            <span class="step-chip active">4. Grounded AI Report</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investigation Report Workspace -->
+      <section id="investigation-workspace" class="results-stage hidden">
+
+        <!-- Executive Determination Card -->
+        <div id="status-hero" class="status-hero-card clean">
+          <div class="status-indicator-strip"></div>
+          <div class="status-hero-body">
+            <div class="status-hero-left">
+              <div class="status-icon-box" id="status-icon-box">
+                <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div class="status-text-block">
+                <div class="status-pretitle">FIRST INVESTIGATION DETERMINATION</div>
+                <h2 id="status-heading" class="status-title">STATUS: NO IMMEDIATE ATTENTION REQUIRED</h2>
+                <p id="status-summary-text" class="status-desc">No configured risk rules were triggered. All reviewed transactions are consistent with the customer's established pattern.</p>
+              </div>
             </div>
-          </div>
-          <div class="narrative-disclaimer">
-            <strong>Decision-Support Notice:</strong> This assistant provides risk signals and baseline comparisons to support human investigators. It never states that fraud has occurred. The investigator retains final decision authority.
-          </div>
-          <div id="narrative-content" class="narrative-body">
-            <!-- Formatted Markdown Report inserted by JS -->
+            <div class="status-hero-right">
+              <div class="audit-seal">
+                <svg class="icon-verified" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+                </svg>
+                <div class="audit-seal-text">
+                  <span class="seal-label">DECISION SUPPORT</span>
+                  <span class="seal-sub">Traceable To Source Data</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Comprehensive Transaction History Table -->
-        <div class="card table-card">
-          <div class="table-toolbar">
-            <div class="toolbar-left">
-              <h3>Customer Transaction History</h3>
-              <p class="toolbar-desc">Full chronological transaction log with deterministic risk tagging</p>
+        <!-- Telemetry & Baseline Metrics Grid -->
+        <div class="baseline-grid">
+          <div class="metric-box glass-panel">
+            <div class="metric-top">
+              <span class="metric-title">Customer Median Baseline</span>
+              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+              </svg>
             </div>
-            <div class="toolbar-right">
-              <div class="filter-toggles">
-                <button class="toggle-btn active" id="filter-all-btn">All Transactions (<span id="total-tx-count">0</span>)</button>
-                <button class="toggle-btn" id="filter-flagged-btn">Flagged Only (<span id="flagged-tx-count">0</span>)</button>
+            <div class="metric-figure code-font" id="metric-median">INR 0.00</div>
+            <div class="metric-footer" id="metric-median-sub">Dynamic median calculated over debit transactions</div>
+          </div>
+
+          <div class="metric-box glass-panel">
+            <div class="metric-top">
+              <span class="metric-title">Dominant Channel Profile</span>
+              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+              </svg>
+            </div>
+            <div class="metric-figure code-font" id="metric-channel">CARD_POS</div>
+            <div class="metric-footer">
+              <span id="metric-channel-pct">0% of total debit activity</span>
+              <div class="channel-bar-track">
+                <div class="channel-bar-fill" id="metric-channel-bar" style="width: 80%;"></div>
               </div>
             </div>
           </div>
 
-          <div class="table-responsive">
-            <table class="tx-table" id="transactions-table">
+          <div class="metric-box glass-panel">
+            <div class="metric-top">
+              <span class="metric-title">Active Operating Schedule</span>
+              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="metric-figure" id="metric-hours">07:00–22:00</div>
+            <div class="metric-footer" id="metric-hours-sub">Historical operating distribution</div>
+          </div>
+
+          <div class="metric-box glass-panel">
+            <div class="metric-top">
+              <span class="metric-title">Risk Signals Triggered</span>
+              <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+              </svg>
+            </div>
+            <div class="metric-figure" id="metric-flagged-count">0 / 0</div>
+            <div class="metric-footer" id="metric-rules-sub">Rules evaluated: 4 of 4</div>
+          </div>
+        </div>
+
+        <!-- Structured Risk Findings Section -->
+        <section id="findings-wrapper" class="findings-wrapper hidden">
+          <div class="section-banner">
+            <div class="section-banner-title">
+              <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/>
+              </svg>
+              <h3>Deterministic Risk Findings</h3>
+            </div>
+            <span class="findings-counter-pill" id="findings-counter">0 Active Findings</span>
+          </div>
+
+          <div id="findings-deck" class="findings-deck">
+            <!-- Dynamically injected finding cards -->
+          </div>
+        </section>
+
+        <!-- Gemini Grounded Narrative Report Panel -->
+        <section class="ai-report-panel glass-panel">
+          <div class="ai-report-header">
+            <div class="ai-header-left">
+              <div class="ai-orb">
+                <div class="orb-inner"></div>
+              </div>
+              <div class="ai-header-text">
+                <h3>Grounded Investigation Narrative</h3>
+                <p>Synthesized by Gemini strictly from Python deterministic findings and cited records</p>
+              </div>
+            </div>
+            <div class="ai-header-right">
+              <div class="model-badge-prominent" id="ai-model-badge">
+                <span class="dot-active"></span>
+                <span id="ai-model-name">gemini-3.5-flash-lite</span>
+              </div>
+              <span class="grounding-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                Zero Hallucination Constraint
+              </span>
+            </div>
+          </div>
+
+          <div class="guardrail-callout">
+            <div class="guardrail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+              </svg>
+            </div>
+            <div class="guardrail-text">
+              <strong>Fraud Desk Guardrail:</strong> This system assists human investigators. It never outputs "fraud detected". Findings highlight statistical deviations and provide traceable evidence for investigator adjudication.
+            </div>
+          </div>
+
+          <div class="ai-report-body markdown-rendered" id="ai-report-content">
+            <!-- Narrative Report inserted by JS -->
+          </div>
+        </section>
+
+        <!-- Interactive Transaction Evidence Ledger -->
+        <section class="ledger-panel glass-panel">
+          <div class="ledger-header">
+            <div class="ledger-title-area">
+              <h3>Transaction History &amp; Evidence Audit Ledger</h3>
+              <p>Traceable chronologically sorted account records with deterministic rule annotations</p>
+            </div>
+            
+            <div class="ledger-actions">
+              <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+                <input type="text" id="tx-search-input" placeholder="Search payee, ID, channel...">
+              </div>
+
+              <div class="view-filter-tabs">
+                <button class="filter-tab active" id="tab-all">All (<span id="count-all">0</span>)</button>
+                <button class="filter-tab tab-flagged" id="tab-flagged">Flagged Risk (<span id="count-flagged">0</span>)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ledger-table-container">
+            <table class="ledger-table" id="ledger-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Date &amp; Time</th>
+                  <th style="width: 120px;">Transaction ID</th>
+                  <th style="width: 170px;">Date &amp; Time</th>
                   <th>Description</th>
-                  <th>Payee</th>
-                  <th>Channel</th>
-                  <th>Amount</th>
-                  <th>Risk Status</th>
+                  <th>Payee Entity</th>
+                  <th style="width: 120px;">Channel</th>
+                  <th style="width: 150px; text-align: right;">Amount (INR)</th>
+                  <th style="width: 220px; text-align: center;">Rule Trigger</th>
                 </tr>
               </thead>
-              <tbody id="tx-table-body">
-                <!-- Rows populated dynamically -->
+              <tbody id="ledger-table-body">
+                <!-- Injected by JS -->
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
 
       </section>
 
-      <!-- Initial Welcome Card (before first run) -->
-      <section id="welcome-card" class="welcome-card card">
-        <div class="welcome-header">
-          <h2>Ready for Investigation</h2>
-          <p>Select a customer account from the dropdown above to inspect their profile and run deterministic risk rules.</p>
+      <!-- Welcome / Cockpit Overview Screen (shown on start) -->
+      <section id="welcome-overview" class="welcome-overview glass-panel">
+        <div class="welcome-hero-banner">
+          <div class="welcome-badge">SYSTEM ARCHITECTURE · PS06</div>
+          <h2>Investigator Decision-Support Cockpit</h2>
+          <p>This application reviews a bank customer's multi-month transaction history against four deterministic risk rules, calculates customer-specific baselines, and generates a grounded investigator report.</p>
         </div>
-        <div class="rule-explanations-grid">
-          <div class="rule-expl-box">
-            <div class="rule-num">Rule 1</div>
+
+        <div class="rule-architecture-grid">
+          <div class="rule-card">
+            <div class="rule-card-header">
+              <span class="rule-pill-code">RULE 1</span>
+              <span class="rule-tech-tag">Median Baseline</span>
+            </div>
             <h4>Unusually Large Transaction</h4>
-            <p>Compares candidate debits against the customer's own historical median (no hard-coded thresholds).</p>
+            <p>Calculates the customer's personal median debit across history. Flags non-recurring massive outliers without hardcoded static thresholds.</p>
           </div>
-          <div class="rule-expl-box">
-            <div class="rule-num">Rule 2</div>
-            <h4>Burst to New/Infrequent Payee</h4>
-            <p>Detects rapid succession of high-value payments to newly seen or rarely seen entities.</p>
+
+          <div class="rule-card">
+            <div class="rule-card-header">
+              <span class="rule-pill-code">RULE 2</span>
+              <span class="rule-tech-tag">48h Velocity</span>
+            </div>
+            <h4>Burst to New / Infrequent Payee</h4>
+            <p>Monitors payee novelty. Detects rapid high-value multi-transaction bursts sent to newly seen payees with zero or near-zero prior history.</p>
           </div>
-          <div class="rule-expl-box">
-            <div class="rule-num">Rule 3</div>
+
+          <div class="rule-card">
+            <div class="rule-card-header">
+              <span class="rule-pill-code">RULE 3</span>
+              <span class="rule-tech-tag">Temporal Analysis</span>
+            </div>
             <h4>Odd-Hours Activity</h4>
-            <p>Identifies transactions executed during off-hours (00:00–05:00) contrasting against typical active schedule.</p>
+            <p>Detects high-value transactions executed during off-hours (00:00–05:00) sharply contrasting against the customer's daytime profile.</p>
           </div>
-          <div class="rule-expl-box">
-            <div class="rule-num">Rule 4</div>
+
+          <div class="rule-card">
+            <div class="rule-card-header">
+              <span class="rule-pill-code">RULE 4</span>
+              <span class="rule-tech-tag">Behavioral Shift</span>
+            </div>
             <h4>Pattern Break</h4>
-            <p>Statistical detection of sudden channel disruptions and ticket-size surges relative to baseline.</p>
+            <p>Deterministic statistical check for acute channel pivots (e.g. 98% in-store card to netbanking wires) and sudden ticket-size multipliers.</p>
+          </div>
+        </div>
+
+        <div class="architecture-flow-row">
+          <div class="flow-step">
+            <div class="flow-num">01</div>
+            <div class="flow-desc">
+              <strong>Python Engine</strong>
+              <span>Loads transactions, cleans data, computes customer baselines.</span>
+            </div>
+          </div>
+          <div class="flow-separator">&rarr;</div>
+          <div class="flow-step">
+            <div class="flow-num">02</div>
+            <div class="flow-desc">
+              <strong>Deterministic Rules</strong>
+              <span>Runs the 4 rules. Validates strict evidence traceability.</span>
+            </div>
+          </div>
+          <div class="flow-separator">&rarr;</div>
+          <div class="flow-step">
+            <div class="flow-num">03</div>
+            <div class="flow-desc">
+              <strong>Gemini Reporting</strong>
+              <span>Synthesizes professional investigator report with 7 (or 4) sections.</span>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
 
-    <!-- Footer -->
+    <!-- Platform Footer -->
     <footer class="app-footer">
-      <p>NexusTiQ24 &middot; Track PS06 Transaction Risk Investigation Assistant &middot; 24-Hour Hackathon &middot; <span class="code-font">gemini-3.5-flash-lite</span></p>
+      <div class="footer-inner">
+        <span>NexusTiQ24 &bull; Track ID: <strong class="code-font">PS06</strong> &bull; Fraud Desk Investigation Assistant</span>
+        <span>Evaluated against: <strong class="code-font">gemini-3.5-flash-lite</strong></span>
+      </div>
     </footer>
   </div>
 

@@ -1,131 +1,175 @@
 /**
  * Transaction Risk Investigation Assistant (PS06)
- * Vanilla JavaScript Frontend Controller
+ * Enterprise AI Frontend Controller
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Elements
-  const backendStatusEl = document.getElementById('backend-status');
-  const modelDisplayEl = document.getElementById('model-name-display');
+  // Navigation & Telemetry
+  const connectionStatusEl = document.getElementById('connection-status');
+  const backendStatusTextEl = document.getElementById('backend-status-text');
+  const modelDisplayEl = document.getElementById('model-display');
+
+  // Command Center
   const customerSelectEl = document.getElementById('customer-select');
   const runBtnEl = document.getElementById('run-btn');
   const runBtnTextEl = document.getElementById('run-btn-text');
-  
-  // Containers
-  const welcomeCardEl = document.getElementById('welcome-card');
-  const profileBannerEl = document.getElementById('customer-profile-banner');
-  const loadingSpinnerEl = document.getElementById('loading-spinner');
-  const resultsAreaEl = document.getElementById('investigation-results');
-  
-  // Profile Elements
-  const avatarInitialsEl = document.getElementById('avatar-initials');
-  const custNameEl = document.getElementById('cust-name');
-  const custIdEl = document.getElementById('cust-id');
-  const custAccEl = document.getElementById('cust-acc');
-  const custTxCountEl = document.getElementById('cust-tx-count');
-  const custRiskTagEl = document.getElementById('cust-risk-tag');
-  const custNotesEl = document.getElementById('cust-notes');
-  
-  // Status Hero Elements
-  const statusCardEl = document.getElementById('status-card');
-  const statusHeadlineEl = document.getElementById('status-headline');
-  const statusSubtextEl = document.getElementById('status-subtext');
-  const statusIconEl = document.getElementById('status-icon');
-  
-  // Baseline Metric Elements
-  const statMedianEl = document.getElementById('stat-median');
-  const statChannelEl = document.getElementById('stat-channel');
-  const statChannelPctEl = document.getElementById('stat-channel-pct');
-  const statHoursEl = document.getElementById('stat-hours');
-  const statHoursDescEl = document.getElementById('stat-hours-desc');
-  const statFlaggedCountEl = document.getElementById('stat-flagged-count');
-  const statRulesTriggeredEl = document.getElementById('stat-rules-triggered');
-  
-  // Findings Elements
-  const findingsSectionEl = document.getElementById('findings-section');
-  const findingsBadgeEl = document.getElementById('findings-badge');
-  const findingsListEl = document.getElementById('findings-list');
-  
-  // Narrative Elements
-  const narrativeContentEl = document.getElementById('narrative-content');
-  const narrativeModelBadgeEl = document.getElementById('narrative-model-badge');
-  
-  // Table Elements
-  const txTableBodyEl = document.getElementById('tx-table-body');
-  const totalTxCountEl = document.getElementById('total-tx-count');
-  const flaggedTxCountEl = document.getElementById('flagged-tx-count');
-  const filterAllBtnEl = document.getElementById('filter-all-btn');
-  const filterFlaggedBtnEl = document.getElementById('filter-flagged-btn');
+  const quickJumpContainerEl = document.getElementById('quick-jump-container');
 
-  // Application State
+  // Dossier Card
+  const customerDossierEl = document.getElementById('customer-dossier');
+  const dossierAvatarEl = document.getElementById('dossier-avatar');
+  const dossierNameEl = document.getElementById('dossier-name');
+  const dossierIdEl = document.getElementById('dossier-id');
+  const dossierAccEl = document.getElementById('dossier-acc');
+  const dossierCountEl = document.getElementById('dossier-count');
+  const dossierRiskEl = document.getElementById('dossier-risk');
+  const dossierNotesEl = document.getElementById('dossier-notes');
+
+  // Loaders & Sections
+  const engineLoaderEl = document.getElementById('engine-loader');
+  const welcomeOverviewEl = document.getElementById('welcome-overview');
+  const investigationWorkspaceEl = document.getElementById('investigation-workspace');
+
+  // Status Hero
+  const statusHeroEl = document.getElementById('status-hero');
+  const statusIconBoxEl = document.getElementById('status-icon-box');
+  const statusHeadingEl = document.getElementById('status-heading');
+  const statusSummaryTextEl = document.getElementById('status-summary-text');
+
+  // Baseline Metrics
+  const metricMedianEl = document.getElementById('metric-median');
+  const metricMedianSubEl = document.getElementById('metric-median-sub');
+  const metricChannelEl = document.getElementById('metric-channel');
+  const metricChannelPctEl = document.getElementById('metric-channel-pct');
+  const metricChannelBarEl = document.getElementById('metric-channel-bar');
+  const metricHoursEl = document.getElementById('metric-hours');
+  const metricHoursSubEl = document.getElementById('metric-hours-sub');
+  const metricFlaggedCountEl = document.getElementById('metric-flagged-count');
+  const metricRulesSubEl = document.getElementById('metric-rules-sub');
+
+  // Findings Deck
+  const findingsWrapperEl = document.getElementById('findings-wrapper');
+  const findingsCounterEl = document.getElementById('findings-counter');
+  const findingsDeckEl = document.getElementById('findings-deck');
+
+  // AI Narrative Report
+  const aiModelBadgeEl = document.getElementById('ai-model-badge');
+  const aiModelNameEl = document.getElementById('ai-model-name');
+  const aiReportContentEl = document.getElementById('ai-report-content');
+
+  // Ledger Table & Filters
+  const txSearchInputEl = document.getElementById('tx-search-input');
+  const tabAllBtn = document.getElementById('tab-all');
+  const tabFlaggedBtn = document.getElementById('tab-flagged');
+  const countAllEl = document.getElementById('count-all');
+  const countFlaggedEl = document.getElementById('count-flagged');
+  const ledgerTableBodyEl = document.getElementById('ledger-table-body');
+
+  // State
+  let availableCustomers = [];
   let currentTransactions = [];
   let currentFlaggedIds = new Set();
   let currentFlaggedRuleMap = new Map();
   let currentFilter = 'ALL'; // 'ALL' or 'FLAGGED'
+  let searchQuery = '';
+
+  // Quick Demo Jump Scenarios metadata
+  const DEMO_TARGETS = [
+    { id: 'CUST_101', label: 'CUST_101 (Clean Salaried)', type: 'clean' },
+    { id: 'CUST_102', label: 'CUST_102 (Rule 1: Outlier Wire)', type: 'flagged' },
+    { id: 'CUST_103', label: 'CUST_103 (Rule 2: Rapid Burst)', type: 'flagged' },
+    { id: 'CUST_104', label: 'CUST_104 (Rule 3: 02:42 AM Odd Hours)', type: 'flagged' },
+    { id: 'CUST_105', label: 'CUST_105 (Rule 4: Pattern Break)', type: 'flagged' },
+    { id: 'CUST_106', label: 'CUST_106 (Clean Freelancer)', type: 'clean' },
+  ];
 
   // =========================================================================
-  // 1. System Health & Connectivity Check
+  // 1. Initial System Boot & Health Check
   // =========================================================================
-  async function initSystem() {
+  async function bootSystem() {
     try {
       const resp = await fetch('/api/health');
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
 
-      backendStatusEl.className = 'status-chip online';
-      backendStatusEl.innerHTML = `
-        <span class="pulse-dot"></span>
-        <span class="chip-text">Backend Connected (${data.mode || 'Active'})</span>
-      `;
+      connectionStatusEl.className = 'telemetry-item online';
+      backendStatusTextEl.textContent = `Online (${data.mode || 'Connected'})`;
 
       if (data.gemini_model) {
         modelDisplayEl.textContent = data.gemini_model;
       }
 
-      await loadCustomers();
+      await fetchCustomers();
+      renderQuickJumpChips();
     } catch (err) {
-      console.error('Backend connection error:', err);
-      backendStatusEl.className = 'status-chip offline';
-      backendStatusEl.innerHTML = `
-        <span class="pulse-dot"></span>
-        <span class="chip-text">Backend Offline</span>
-      `;
+      console.error('Boot health check failed:', err);
+      connectionStatusEl.className = 'telemetry-item offline';
+      backendStatusTextEl.textContent = 'Service Disconnected';
     }
   }
 
   // =========================================================================
-  // 2. Load Customers Dropdown
+  // 2. Fetch Customer Directory
   // =========================================================================
-  async function loadCustomers() {
+  async function fetchCustomers() {
     try {
       const resp = await fetch('/api/customers');
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
+      availableCustomers = data.customers || [];
 
-      customerSelectEl.innerHTML = '<option value="">-- Select Customer Account to Review --</option>';
-      (data.customers || []).forEach(c => {
+      customerSelectEl.innerHTML = '<option value="">-- Choose Customer Account to Investigate --</option>';
+      availableCustomers.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c.customer_id;
-        opt.textContent = `${c.name} (${c.customer_id}) — ${c.transaction_count} txs [${c.notes.slice(0, 48)}...]`;
+        opt.textContent = `${c.name} (${c.customer_id}) — ${c.transaction_count} txs [${c.risk_profile} Risk]`;
         customerSelectEl.appendChild(opt);
       });
       customerSelectEl.disabled = false;
     } catch (err) {
-      console.error('Failed to load customers:', err);
+      console.error('Error fetching customers:', err);
       customerSelectEl.innerHTML = '<option value="">Error loading customers</option>';
     }
   }
 
   // =========================================================================
-  // 3. Customer Selection Changed
+  // 3. Quick Demo Shortcuts for Hackathon Evaluators
+  // =========================================================================
+  function renderQuickJumpChips() {
+    quickJumpContainerEl.innerHTML = '';
+    DEMO_TARGETS.forEach(target => {
+      const chip = document.createElement('button');
+      chip.className = `jump-chip chip-${target.type}`;
+      chip.textContent = target.label;
+      chip.onclick = () => selectAndFocusCustomer(target.id);
+      quickJumpContainerEl.appendChild(chip);
+    });
+  }
+
+  function selectAndFocusCustomer(custId) {
+    customerSelectEl.value = custId;
+    customerSelectEl.dispatchEvent(new Event('change'));
+    
+    // Update active state in chips
+    document.querySelectorAll('.jump-chip').forEach(c => {
+      if (c.textContent.includes(custId)) {
+        c.classList.add('active');
+      } else {
+        c.classList.remove('active');
+      }
+    });
+  }
+
+  // =========================================================================
+  // 4. Customer Selection Event
   // =========================================================================
   customerSelectEl.addEventListener('change', async (e) => {
     const custId = e.target.value;
     if (!custId) {
       runBtnEl.disabled = true;
-      profileBannerEl.classList.add('hidden');
-      resultsAreaEl.classList.add('hidden');
-      welcomeCardEl.classList.remove('hidden');
+      customerDossierEl.classList.add('hidden');
+      investigationWorkspaceEl.classList.add('hidden');
+      welcomeOverviewEl.classList.remove('hidden');
       return;
     }
 
@@ -134,166 +178,186 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const cust = await resp.json();
 
-      // Render profile banner
-      const initials = cust.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-      avatarInitialsEl.textContent = initials;
-      custNameEl.textContent = cust.name;
-      custIdEl.textContent = cust.customer_id;
-      custAccEl.textContent = cust.account_number;
-      custTxCountEl.textContent = `${cust.transaction_count} Transactions`;
-      custRiskTagEl.textContent = `${cust.risk_profile} Risk Profile`;
-      custNotesEl.textContent = cust.notes;
+      // Render spotlight dossier card
+      const initials = cust.name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+      dossierAvatarEl.textContent = initials;
+      dossierNameEl.textContent = cust.name;
+      dossierIdEl.textContent = cust.customer_id;
+      dossierAccEl.textContent = cust.account_number;
+      dossierCountEl.textContent = `${cust.transaction_count} Transactions`;
+      dossierRiskEl.textContent = `${cust.risk_profile} Risk Profile`;
+      dossierNotesEl.textContent = cust.notes;
 
-      profileBannerEl.classList.remove('hidden');
+      customerDossierEl.classList.remove('hidden');
       runBtnEl.disabled = false;
 
-      // Reset state and show preview transactions
+      // Reset ledger preview state
       currentTransactions = cust.transactions || [];
       currentFlaggedIds = new Set();
       currentFlaggedRuleMap = new Map();
       currentFilter = 'ALL';
-      filterAllBtnEl.classList.add('active');
-      filterFlaggedBtnEl.classList.remove('active');
+      searchQuery = '';
+      if (txSearchInputEl) txSearchInputEl.value = '';
+      tabAllBtn.classList.add('active');
+      tabFlaggedBtn.classList.remove('active');
 
-      resultsAreaEl.classList.add('hidden');
-      welcomeCardEl.classList.remove('hidden');
+      investigationWorkspaceEl.classList.add('hidden');
+      welcomeOverviewEl.classList.remove('hidden');
     } catch (err) {
-      console.error('Error fetching customer details:', err);
+      console.error('Error reading customer dossier:', err);
     }
   });
 
   // =========================================================================
-  // 4. Run Investigation
+  // 5. Execute Investigation Engine
   // =========================================================================
   runBtnEl.addEventListener('click', async () => {
     const custId = customerSelectEl.value;
     if (!custId) return;
 
-    // UI Loading state
+    // Trigger radar loader and transition
     runBtnEl.disabled = true;
-    runBtnTextEl.textContent = 'Analyzing...';
-    welcomeCardEl.classList.add('hidden');
-    resultsAreaEl.classList.add('hidden');
-    loadingSpinnerEl.classList.remove('hidden');
+    runBtnTextEl.textContent = 'Auditing Account...';
+    welcomeOverviewEl.classList.add('hidden');
+    investigationWorkspaceEl.classList.add('hidden');
+    engineLoaderEl.classList.remove('hidden');
 
     try {
       const resp = await fetch(`/api/investigate/${custId}`, { method: 'POST' });
       if (!resp.ok) {
-        const errorData = await resp.json();
-        throw new Error(errorData.error || `HTTP ${resp.status}`);
+        const err = await resp.json();
+        throw new Error(err.error || `HTTP ${resp.status}`);
       }
       const data = await resp.json();
 
-      renderInvestigationResults(data);
+      // Small deliberate delay so the user witnesses the deterministic scanner steps
+      setTimeout(() => {
+        engineLoaderEl.classList.add('hidden');
+        renderFullInvestigation(data);
+        runBtnEl.disabled = false;
+        runBtnTextEl.textContent = 'Run Risk Investigation';
+      }, 450);
+
     } catch (err) {
-      console.error('Investigation failed:', err);
-      alert(`Investigation failed: ${err.message}`);
-    } finally {
-      loadingSpinnerEl.classList.add('hidden');
+      console.error('Investigation execution error:', err);
+      engineLoaderEl.classList.add('hidden');
       runBtnEl.disabled = false;
-      runBtnTextEl.textContent = 'Run Investigation';
+      runBtnTextEl.textContent = 'Run Risk Investigation';
+      alert(`Investigation Engine Alert: ${err.message}`);
     }
   });
 
   // =========================================================================
-  // 5. Render Investigation Results
+  // 6. Render Full Investigation Results
   // =========================================================================
-  function renderInvestigationResults(data) {
+  function renderFullInvestigation(data) {
     const isAttention = data.overall_status === 'ATTENTION_REQUIRED';
     const findings = data.findings || [];
     const flaggedTxs = data.flagged_transactions || [];
     const baseline = data.baseline_profile || {};
-    const aiNarrative = data.ai_narrative || {};
+    const ai = data.ai_narrative || {};
 
-    // 1. Update Hero Status
-    statusCardEl.className = `status-hero ${isAttention ? 'attention' : 'clean'}`;
+    // 1. Executive Status Hero Card
+    statusHeroEl.className = `status-hero-card ${isAttention ? 'attention' : 'clean'}`;
     if (isAttention) {
-      statusHeadlineEl.textContent = 'STATUS: ATTENTION REQUIRED';
-      statusSubtextEl.textContent = `${findings.length} risk signal(s) detected across ${flaggedTxs.length} transaction(s). Activity exhibits unusual characteristics relative to customer's baseline.`;
-      statusIconEl.innerHTML = `
-        <svg viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      statusHeadingEl.textContent = 'STATUS: ATTENTION REQUIRED';
+      statusSummaryTextEl.textContent = `Identified ${findings.length} risk signal(s) across ${flaggedTxs.length} transaction(s). Activity exhibits unusual characteristics relative to customer's baseline.`;
+      statusIconBoxEl.innerHTML = `
+        <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+          <line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/>
         </svg>
       `;
     } else {
-      statusHeadlineEl.textContent = 'STATUS: NO IMMEDIATE ATTENTION REQUIRED';
-      statusSubtextEl.textContent = 'No configured risk rules were triggered. All reviewed transaction activity is broadly consistent with the customer’s established pattern.';
-      statusIconEl.innerHTML = `
-        <svg viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      statusHeadingEl.textContent = 'STATUS: NO IMMEDIATE ATTENTION REQUIRED';
+      statusSummaryTextEl.textContent = 'No configured risk rules were triggered. All reviewed transactions align with the customer’s established baseline and regular spending pattern.';
+      statusIconBoxEl.innerHTML = `
+        <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
       `;
     }
 
-    // 2. Update Baseline Metrics
-    statMedianEl.textContent = `INR ${(baseline.median_debit || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-    statChannelEl.textContent = baseline.dominant_channel || 'NONE';
-    statChannelPctEl.textContent = `${baseline.dominant_channel_pct || 0}% of historical debits`;
-    statHoursEl.textContent = '07:00–22:00';
-    statHoursDescEl.textContent = baseline.active_hours_summary || 'Standard daytime';
-    statFlaggedCountEl.textContent = `${flaggedTxs.length} / ${baseline.total_transactions || 0}`;
-    statRulesTriggeredEl.textContent = `${findings.length} Rule(s) Triggered`;
+    // 2. Baseline Metrics
+    metricMedianEl.textContent = `INR ${(baseline.median_debit || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+    metricMedianSubEl.textContent = `Calculated across ${baseline.total_debits || 0} historical debits`;
+    metricChannelEl.textContent = baseline.dominant_channel || 'NONE';
+    metricChannelPctEl.textContent = `${baseline.dominant_channel_pct || 0}% of historical volume`;
+    metricChannelBarEl.style.width = `${Math.min(baseline.dominant_channel_pct || 10, 100)}%`;
+    metricHoursEl.textContent = '07:00–22:00';
+    metricHoursSubEl.textContent = baseline.active_hours_summary || 'Standard daytime activity';
+    metricFlaggedCountEl.textContent = `${flaggedTxs.length} / ${baseline.total_transactions || 0}`;
+    metricRulesSubEl.textContent = `${findings.length} rule trigger(s) detected`;
 
-    // 3. Render Structured Findings
+    // 3. Structured Risk Findings Deck
     if (findings.length > 0) {
-      findingsSectionEl.classList.remove('hidden');
-      findingsBadgeEl.textContent = `${findings.length} Finding(s)`;
-      findingsBadgeEl.className = 'badge badge-subtle';
-      findingsListEl.innerHTML = '';
+      findingsWrapperEl.classList.remove('hidden');
+      findingsCounterEl.textContent = `${findings.length} Active Finding(s)`;
+      findingsDeckEl.innerHTML = '';
 
       findings.forEach(f => {
         const card = document.createElement('div');
         card.className = `finding-card severity-${f.severity.toLowerCase()}`;
-        
-        const txChips = f.transaction_ids.map(id => `<span class="tx-chip">${id}</span>`).join('');
-        
+
+        const chipsHtml = f.transaction_ids.map(id => `<span class="evidence-tx-chip code-font">${id}</span>`).join(' ');
+
         card.innerHTML = `
-          <div class="finding-header">
-            <div class="rule-name-badge">
-              <span>&bull;</span> ${f.rule}
+          <div class="finding-card-top">
+            <div class="rule-indicator">
+              <span class="rule-beacon"></span>
+              <span>${f.rule}</span>
             </div>
-            <div class="severity-pill ${f.severity.toLowerCase()}">${f.severity} SEVERITY</div>
+            <span class="severity-pill-modern ${f.severity.toLowerCase()}">${f.severity} SEVERITY</span>
           </div>
-          <div class="finding-tx-tags">
-            <span style="color: var(--text-muted); font-size: 0.78rem;">FLAGGED TRANSACTION(S):</span>
-            ${txChips}
+
+          <div class="finding-cited-txs">
+            <span class="cited-label">Cited Evidence Record(s):</span>
+            ${chipsHtml}
           </div>
-          <div class="finding-detail-grid">
-            <div class="detail-row">
-              <span class="detail-lbl">Why Flagged:</span>
-              <span class="detail-txt">${f.reason}</span>
+
+          <div class="finding-columns-grid">
+            <div class="finding-col-item">
+              <span class="col-header">Why Flagged</span>
+              <span class="col-text">${f.reason}</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-lbl">Baseline:</span>
-              <span class="detail-txt">${f.baseline}</span>
+            <div class="finding-col-item">
+              <span class="col-header">Customer Baseline</span>
+              <span class="col-text">${f.baseline}</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-lbl">Deviation:</span>
-              <span class="detail-txt">${f.deviation}</span>
+            <div class="finding-col-item">
+              <span class="col-header">Magnitude &amp; Deviation</span>
+              <span class="col-text" style="color: var(--cyan-bright); font-weight: 600;">${f.deviation}</span>
             </div>
           </div>
-          <div class="investigator-action-box">
-            <span class="action-icon">&#9998;</span>
-            <div class="action-text">
+
+          <div class="investigator-directive-box">
+            <svg class="directive-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/>
+              <line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <div class="directive-text">
               <strong>Investigator Action:</strong> ${f.investigator_action}
             </div>
           </div>
         `;
-        findingsListEl.appendChild(card);
+        findingsDeckEl.appendChild(card);
       });
     } else {
-      findingsSectionEl.classList.add('hidden');
+      findingsWrapperEl.classList.add('hidden');
     }
 
-    // 4. Render Narrative AI Report
-    narrativeModelBadgeEl.textContent = aiNarrative.model || 'gemini-3.5-flash-lite';
-    if (aiNarrative.is_fallback) {
-      narrativeModelBadgeEl.textContent = 'Deterministic Fallback';
-      narrativeModelBadgeEl.title = aiNarrative.fallback_reason || 'Offline Fallback';
+    // 4. Grounded AI Narrative Report
+    aiModelNameEl.textContent = ai.model || 'gemini-3.5-flash-lite';
+    if (ai.is_fallback) {
+      aiModelBadgeEl.classList.add('fallback');
+      aiModelNameEl.textContent = 'Deterministic Fallback Engine';
+    } else {
+      aiModelBadgeEl.classList.remove('fallback');
     }
-    narrativeContentEl.innerHTML = formatMarkdownToHTML(aiNarrative.content || 'No narrative report generated.');
+    aiReportContentEl.innerHTML = parseMarkdownToHTML(ai.content || 'Report generation unavailable.');
 
-    // 5. Setup Flagged Transaction Tracking for Table
+    // 5. Store Flagged IDs & Rule Map for Ledger Highlighting
     currentTransactions = data.all_transactions || [];
     currentFlaggedIds = new Set(flaggedTxs.map(t => t.transaction_id));
     currentFlaggedRuleMap = new Map();
@@ -301,99 +365,121 @@ document.addEventListener('DOMContentLoaded', () => {
       currentFlaggedRuleMap.set(t.transaction_id, (t.triggered_rules || []).join(', '));
     });
 
-    totalTxCountEl.textContent = currentTransactions.length;
-    flaggedTxCountEl.textContent = currentFlaggedIds.size;
+    countAllEl.textContent = currentTransactions.length;
+    countFlaggedEl.textContent = currentFlaggedIds.size;
 
-    renderTransactionsTable();
-    resultsAreaEl.classList.remove('hidden');
-    resultsAreaEl.scrollIntoView({ behavior: 'smooth' });
+    renderLedger();
+    investigationWorkspaceEl.classList.remove('hidden');
+    investigationWorkspaceEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // =========================================================================
-  // 6. Transactions Table Rendering & Filtering
+  // 7. Render Ledger Table (Search & Filter)
   // =========================================================================
-  function renderTransactionsTable() {
-    txTableBodyEl.innerHTML = '';
+  function renderLedger() {
+    ledgerTableBodyEl.innerHTML = '';
 
     const filtered = currentTransactions.filter(tx => {
-      if (currentFilter === 'FLAGGED') {
-        return currentFlaggedIds.has(tx.transaction_id);
+      // Filter tab check
+      if (currentFilter === 'FLAGGED' && !currentFlaggedIds.has(tx.transaction_id)) {
+        return false;
+      }
+      // Search query check
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const matches = (
+          tx.transaction_id.toLowerCase().includes(q) ||
+          tx.description.toLowerCase().includes(q) ||
+          tx.payee.toLowerCase().includes(q) ||
+          tx.channel.toLowerCase().includes(q)
+        );
+        if (!matches) return false;
       }
       return true;
     });
 
     if (filtered.length === 0) {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No transactions match the selected filter.</td>`;
-      txTableBodyEl.appendChild(tr);
+      tr.innerHTML = `<td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No transaction records match the active filter or search criteria.</td>`;
+      ledgerTableBodyEl.appendChild(tr);
       return;
     }
 
     filtered.forEach(tx => {
       const isFlagged = currentFlaggedIds.has(tx.transaction_id);
-      const ruleName = currentFlaggedRuleMap.get(tx.transaction_id) || '';
+      const ruleLabel = currentFlaggedRuleMap.get(tx.transaction_id) || '';
 
       const tr = document.createElement('tr');
-      if (isFlagged) tr.className = 'row-flagged';
+      if (isFlagged) tr.className = 'flagged-row';
 
-      const amountFormatted = `INR ${Number(tx.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-      const amountClass = tx.type === 'DEBIT' ? 'tx-debit' : 'tx-credit';
-      const typePrefix = tx.type === 'DEBIT' ? '-' : '+';
+      const isDebit = tx.type === 'DEBIT';
+      const formattedAmount = `INR ${Number(tx.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      const typeSign = isDebit ? '-' : '+';
+      const amountClass = isDebit ? 'debit' : 'credit';
 
       tr.innerHTML = `
-        <td class="code-font" style="font-weight: 600; font-size: 0.8rem;">${tx.transaction_id}</td>
-        <td class="code-font" style="font-size: 0.8rem; color: var(--text-secondary);">${tx.date}</td>
+        <td class="code-font" style="font-weight: 700; color: ${isFlagged ? 'var(--rose-text)' : 'var(--cyan-bright)'}">${tx.transaction_id}</td>
+        <td class="code-font" style="font-size: 0.78rem; color: var(--text-secondary);">${tx.date}</td>
         <td>${escapeHTML(tx.description)}</td>
-        <td style="font-weight: 500;">${escapeHTML(tx.payee)}</td>
-        <td><span class="channel-pill">${tx.channel}</span></td>
-        <td class="tx-amount ${amountClass}">${typePrefix} ${amountFormatted}</td>
-        <td>
+        <td style="font-weight: 600;">${escapeHTML(tx.payee)}</td>
+        <td><span class="channel-tag">${tx.channel}</span></td>
+        <td class="tx-amount-col ${amountClass}" style="text-align: right;">${typeSign} ${formattedAmount}</td>
+        <td style="text-align: center;">
           ${isFlagged
-            ? `<span class="risk-pill flagged" title="${ruleName}">&#9888; ${ruleName || 'FLAGGED'}</span>`
-            : `<span class="risk-pill clean">&check; Clean</span>`
+            ? `<span class="flag-status-pill alert">&#9888; ${ruleLabel || 'FLAGGED'}</span>`
+            : `<span class="flag-status-pill clean">&check; Clean Routine</span>`
           }
         </td>
       `;
-      txTableBodyEl.appendChild(tr);
+      ledgerTableBodyEl.appendChild(tr);
     });
   }
 
-  // Filter Toggles
-  filterAllBtnEl.addEventListener('click', () => {
+  // Filter Buttons
+  tabAllBtn.addEventListener('click', () => {
     currentFilter = 'ALL';
-    filterAllBtnEl.classList.add('active');
-    filterFlaggedBtnEl.classList.remove('active');
-    renderTransactionsTable();
+    tabAllBtn.classList.add('active');
+    tabFlaggedBtn.classList.remove('active');
+    renderLedger();
   });
 
-  filterFlaggedBtnEl.addEventListener('click', () => {
+  tabFlaggedBtn.addEventListener('click', () => {
     currentFilter = 'FLAGGED';
-    filterFlaggedBtnEl.classList.add('active');
-    filterAllBtnEl.classList.remove('active');
-    renderTransactionsTable();
+    tabFlaggedBtn.classList.add('active');
+    tabAllBtn.classList.remove('active');
+    renderLedger();
+  });
+
+  // Search Input
+  txSearchInputEl.addEventListener('input', (e) => {
+    searchQuery = e.target.value.trim();
+    renderLedger();
   });
 
   // =========================================================================
-  // 7. Utility: Lightweight Safe Markdown to HTML Formatter
+  // 8. Markdown to Clean HTML Formatter
   // =========================================================================
-  function formatMarkdownToHTML(md) {
+  function parseMarkdownToHTML(md) {
     if (!md) return '';
     let html = escapeHTML(md);
 
-    // Format section headers (### 1. Title)
+    // Section Titles (### 1. ...)
     html = html.replace(/^###\s+(.*$)/gim, '<h3>$1</h3>');
     html = html.replace(/^##\s+(.*$)/gim, '<h3>$1</h3>');
 
-    // Bold text (**bold**)
+    // Bold text (**text**)
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-    // Bullet points (* or -)
+    // Bullet points (- or *)
     html = html.replace(/^\s*[\-\*]\s+(.*$)/gim, '<li>$1</li>');
 
-    // Wrap consecutive list items in <ul>
+    // Numbered lists (1. ...)
+    html = html.replace(/^\s*(\d+)\.\s+(.*$)/gim, '<li>$2</li>');
+
+    // Group list items into <ul> or <ol>
     html = html.replace(/(<li>.*<\/li>(\s*<li>.*<\/li>)*)/gim, '<ul>$1</ul>');
 
-    // Linebreaks into paragraphs
+    // Paragraph separation
     html = html.replace(/\n\n+/g, '</p><p>');
     html = `<p>${html}</p>`;
     html = html.replace(/<p>\s*<\/p>/g, '');
@@ -410,6 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#039;');
   }
 
-  // Initialize
-  initSystem();
+  // Boot Application
+  bootSystem();
 });
