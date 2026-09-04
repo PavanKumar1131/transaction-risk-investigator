@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Risk Investigation Assistant · PS06</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-badge">PS06</div>
+        <div class="brand-title">
+          <h1>Transaction Risk Investigation Assistant</h1>
+          <p class="subtitle">Fraud Desk Decision-Support &amp; Deterministic Rule Engine</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div id="backend-status" class="status-indicator loading">
+          <span class="dot"></span>
+          <span class="label">Connecting to Backend...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Control Bar -->
+      <section class="control-bar card">
+        <div class="control-group">
+          <label for="customer-select">Select Customer</label>
+          <div class="select-wrapper">
+            <select id="customer-select" disabled>
+              <option value="">Loading customer records...</option>
+            </select>
+          </div>
+        </div>
+        <div class="action-group">
+          <button id="run-btn" class="btn btn-primary" disabled>
+            <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+            Run Investigation
+          </button>
+        </div>
+      </section>
+
+      <!-- Status / Connection Verification Card (Phase 1) -->
+      <section class="overview-section">
+        <div class="card phase-card" id="connection-card">
+          <div class="card-header">
+            <h2>System Status &amp; Connectivity</h2>
+            <span class="badge badge-info" id="phase-badge">Phase 1: Scaffold Ready</span>
+          </div>
+          <div class="card-body">
+            <p class="description">
+              The Flask investigation service is running on <code>http://localhost:8000</code>.
+              Backend-to-frontend connectivity is verified through standard JSON endpoints.
+            </p>
+
+            <div class="status-grid">
+              <div class="status-metric">
+                <span class="metric-title">Server Host</span>
+                <span class="metric-value" id="srv-host">0.0.0.0:8000</span>
+              </div>
+              <div class="status-metric">
+                <span class="metric-title">Track ID</span>
+                <span class="metric-value" id="track-id">PS06</span>
+              </div>
+              <div class="status-metric">
+                <span class="metric-title">Target Gemini Model</span>
+                <span class="metric-value code-font" id="gemini-model">gemini-3.5-flash-lite</span>
+              </div>
+              <div class="status-metric">
+                <span class="metric-title">API Response</span>
+                <span class="metric-value status-pill" id="api-status">Pinging...</span>
+              </div>
+            </div>
+
+            <div class="architecture-banner">
+              <div class="arch-box">
+                <span class="arch-label">1. Python Rules Engine</span>
+                <span class="arch-desc">Deterministic statistical detection &amp; baseline comparisons (Rules 1–4).</span>
+              </div>
+              <div class="arch-arrow">&rarr;</div>
+              <div class="arch-box">
+                <span class="arch-label">2. Structured Findings</span>
+                <span class="arch-desc">Guaranteed traceable JSON schema contract with exact transaction citations.</span>
+              </div>
+              <div class="arch-arrow">&rarr;</div>
+              <div class="arch-box">
+                <span class="arch-label">3. Gemini Reporter</span>
+                <span class="arch-desc">Grounded report synthesis without autonomous fraud claims.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Placeholder -->
+      <section id="results-container" class="results-container hidden">
+        <!-- Will be populated in subsequent phases -->
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>NexusTiQ24 &middot; PS06 Transaction Risk Investigation Assistant &middot; 24-Hour Hackathon</p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
