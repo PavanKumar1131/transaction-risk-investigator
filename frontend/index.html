@@ -71,40 +71,21 @@
             </select>
           </div>
 
-          <!-- Quick Test Scenario Buttons -->
+          <!-- Quick Test Scenario Buttons (Populated dynamically from canonical customer data) -->
           <div class="scenario-selector-wrap">
             <span class="sub-label">Test Customer Benchmarks:</span>
-            <div class="scenario-btn-stack">
-              <button class="scenario-select-btn" data-cust="CUST_101">
-                <span class="scen-badge clean">Clean</span>
-                <span class="scen-name">Priya Sharma &bull; CUST_101</span>
-              </button>
-              <button class="scenario-select-btn" data-cust="CUST_102">
-                <span class="scen-badge alert">R1: Large Wire</span>
-                <span class="scen-name">Rajesh Verma &bull; CUST_102</span>
-              </button>
-              <button class="scenario-select-btn" data-cust="CUST_103">
-                <span class="scen-badge alert">R2: Payee Burst</span>
-                <span class="scen-name">Anita Patel &bull; CUST_103</span>
-              </button>
-              <button class="scenario-select-btn" data-cust="CUST_104">
-                <span class="scen-badge alert">R3: Odd Hours</span>
-                <span class="scen-name">Vikram Malhotra &bull; CUST_104</span>
-              </button>
-              <button class="scenario-select-btn" data-cust="CUST_105">
-                <span class="scen-badge alert">R4: Pattern Break</span>
-                <span class="scen-name">Sunita Rao &bull; CUST_105</span>
-              </button>
+            <div class="scenario-btn-stack" id="sidebar-benchmark-container">
+              <!-- Populated dynamically via availableCustomers from /api/customers -->
             </div>
           </div>
 
           <!-- Customer Dossier Stat Grid (Requirement 4) -->
           <div id="target-stats-card" class="dossier-card hidden">
             <div class="dossier-header">
-              <div class="dossier-avatar" id="target-avatar">PS</div>
+              <div class="dossier-avatar" id="target-avatar">&mdash;</div>
               <div class="dossier-info">
-                <h4 id="target-name">Priya Sharma</h4>
-                <span class="dossier-acc code-font" id="target-acc">ACC-90812341</span>
+                <h4 id="target-name">&mdash;</h4>
+                <span class="dossier-acc code-font" id="target-acc">&mdash;</span>
               </div>
               <span class="dossier-risk-pill" id="target-risk-pill">LOW RISK</span>
             </div>
@@ -215,32 +196,8 @@
             <p class="empty-desc">
               Select an account from the sidebar or click a benchmark below to generate a comprehensive, grounded investigation report.
             </p>
-            <div class="empty-quick-cards">
-              <div class="benchmark-card" data-cust="CUST_101">
-                <div class="b-badge clean">Clean Baseline</div>
-                <div class="b-name">CUST_101 &bull; Priya Sharma</div>
-                <div class="b-detail">25 routine UPI transactions, all within normal median and active hours.</div>
-              </div>
-              <div class="benchmark-card" data-cust="CUST_102">
-                <div class="b-badge alert">Rule 1 Outlier</div>
-                <div class="b-name">CUST_102 &bull; Rajesh Verma</div>
-                <div class="b-detail">Unprecedented large wire ($14,500) deviating 33.7x from historical debit median.</div>
-              </div>
-              <div class="benchmark-card" data-cust="CUST_103">
-                <div class="b-badge alert">Rule 2 Payee Burst</div>
-                <div class="b-name">CUST_103 &bull; Anita Patel</div>
-                <div class="b-detail">High velocity burst of 3 rapid transfers ($18,500 total) to new payee within 48h.</div>
-              </div>
-              <div class="benchmark-card" data-cust="CUST_104">
-                <div class="b-badge alert">Rule 3 Odd Hours</div>
-                <div class="b-name">CUST_104 &bull; Vikram Malhotra</div>
-                <div class="b-detail">High-value transaction ($6,800) initiated at 02:42 AM contrasting normal daytime hours.</div>
-              </div>
-              <div class="benchmark-card" data-cust="CUST_105">
-                <div class="b-badge alert">Rule 4 Pattern Break</div>
-                <div class="b-name">CUST_105 &bull; Sunita Rao</div>
-                <div class="b-detail">Abrupt channel switch from in-store POS card habits to large wire transfer.</div>
-              </div>
+            <div class="empty-quick-cards" id="empty-benchmark-container">
+              <!-- Populated dynamically via availableCustomers from /api/customers -->
             </div>
           </div>
         </div>

@@ -73,8 +73,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Benchmark metadata definitions (rules and descriptions, WITHOUT hardcoded names)
+  const BENCHMARK_METADATA = {
+    CUST_101: {
+      badge: 'Clean Baseline',
+      badgeClass: 'clean',
+      detail: '25 routine UPI transactions, all within normal median and active hours.'
+    },
+    CUST_102: {
+      badge: 'Rule 1 Outlier',
+      badgeClass: 'alert',
+      detail: 'Unprecedented large wire ($14,500) deviating 33.7x from historical debit median.'
+    },
+    CUST_103: {
+      badge: 'Rule 2 Payee Burst',
+      badgeClass: 'alert',
+      detail: 'High velocity burst of 4 rapid transfers ($18,500 total) to new payee within 48h.'
+    },
+    CUST_104: {
+      badge: 'Rule 3 Odd Hours',
+      badgeClass: 'alert',
+      detail: 'High-value transaction ($6,800) initiated at 02:42 AM contrasting normal daytime hours.'
+    },
+    CUST_105: {
+      badge: 'Rule 4 Pattern Break',
+      badgeClass: 'alert',
+      detail: 'Abrupt channel switch from in-store POS card habits to large wire transfer.'
+    },
+    CUST_106: {
+      badge: 'Clean Varied',
+      badgeClass: 'clean',
+      detail: 'Freelance designer with normal varied micro-transactions and zero rule violations.'
+    }
+  };
+
   // =========================================================================
-  // 2. Load Customer Directory
+  // 2. Load Customer Directory (Single Source of Truth)
   // =========================================================================
   async function loadCustomerList() {
     try {
@@ -83,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await resp.json();
       availableCustomers = data.customers || [];
 
+      // Populate Select Dropdown directly from canonical customer data
       customerSelectEl.innerHTML = '<option value="">-- Choose Account Dossier --</option>';
       availableCustomers.forEach(c => {
         const opt = document.createElement('option');
@@ -91,8 +126,49 @@ document.addEventListener('DOMContentLoaded', () => {
         customerSelectEl.appendChild(opt);
       });
       customerSelectEl.disabled = false;
+
+      // Populate Benchmark Cards and Buttons directly from canonical customer data
+      renderBenchmarkControls();
     } catch (err) {
       console.error('Failed to load customer catalog:', err);
+    }
+  }
+
+  function renderBenchmarkControls() {
+    const sidebarContainer = document.getElementById('sidebar-benchmark-container');
+    const emptyContainer = document.getElementById('empty-benchmark-container');
+
+    if (sidebarContainer) {
+      sidebarContainer.innerHTML = availableCustomers.map(c => {
+        const meta = BENCHMARK_METADATA[c.customer_id] || {
+          badge: c.risk_profile === 'LOW' ? 'Clean' : 'Alert',
+          badgeClass: c.risk_profile === 'LOW' ? 'clean' : 'alert',
+          detail: c.notes || ''
+        };
+        return `
+          <button class="scenario-select-btn" data-cust="${escapeHTML(c.customer_id)}" title="Select ${escapeHTML(c.name)} (${escapeHTML(c.customer_id)})">
+            <span class="scen-badge ${meta.badgeClass}">${escapeHTML(meta.badge)}</span>
+            <span class="scen-name">${escapeHTML(c.name)} &bull; ${escapeHTML(c.customer_id)}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    if (emptyContainer) {
+      emptyContainer.innerHTML = availableCustomers.map(c => {
+        const meta = BENCHMARK_METADATA[c.customer_id] || {
+          badge: c.risk_profile === 'LOW' ? 'Clean Baseline' : 'Benchmark',
+          badgeClass: c.risk_profile === 'LOW' ? 'clean' : 'alert',
+          detail: c.notes || ''
+        };
+        return `
+          <div class="benchmark-card" data-cust="${escapeHTML(c.customer_id)}">
+            <div class="b-badge ${meta.badgeClass}">${escapeHTML(meta.badge)}</div>
+            <div class="b-name">${escapeHTML(c.customer_id)} &bull; ${escapeHTML(c.name)}</div>
+            <div class="b-detail">${escapeHTML(meta.detail || c.notes || '')}</div>
+          </div>
+        `;
+      }).join('');
     }
   }
 
