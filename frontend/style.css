@@ -716,23 +716,23 @@ body {
 }
 
 /* =====================================================================
-   EMPTY STATE VIEW
+   EMPTY STATE VIEW (Quiet Placeholder)
    ===================================================================== */
 .empty-state-view {
   min-height: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: 1.25rem 1.5rem 2.5rem;
+  padding: 2rem 1.5rem;
 }
 
 .empty-state-card {
-  max-width: 680px;
+  max-width: 460px;
   width: 100%;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.6rem;
+  border-radius: var(--radius-md);
+  padding: 1.75rem 1.8rem;
   text-align: center;
   box-shadow: var(--shadow-card);
   display: flex;
@@ -759,76 +759,17 @@ body {
 }
 
 .empty-title {
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: #fff;
   letter-spacing: -0.01em;
 }
 
 .empty-desc {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  max-width: 520px;
-}
-
-.empty-quick-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  text-align: left;
-  margin-top: 0.4rem;
-}
-
-.benchmark-card {
-  background: var(--bg-card-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.benchmark-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--cyan);
-  transform: translateY(-1px);
-}
-
-.b-badge {
-  align-self: flex-start;
-  font-size: 0.62rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  text-transform: uppercase;
-}
-
-.b-badge.clean {
-  background: var(--emerald-bg);
-  color: var(--emerald-text);
-  border: 1px solid var(--emerald-border);
-}
-
-.b-badge.alert {
-  background: var(--rose-bg);
-  color: var(--rose-text);
-  border: 1px solid var(--rose-border);
-}
-
-.b-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.b-detail {
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 380px;
 }
 
 /* =====================================================================

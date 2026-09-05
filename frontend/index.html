@@ -179,7 +179,7 @@
       <!-- Persistent Report Container (Replaces content on audit) -->
       <div class="report-view-container" id="report-view-container">
         
-        <!-- INITIAL EMPTY STATE -->
+        <!-- INITIAL EMPTY STATE (Quiet Placeholder) -->
         <div id="report-empty-state" class="empty-state-view">
           <div class="empty-state-card">
             <div class="empty-state-icon">
@@ -188,13 +188,10 @@
                 <path d="M9 12l2 2 4-4"/>
               </svg>
             </div>
-            <h3 class="empty-title">Fraud Investigation Studio</h3>
+            <h3 class="empty-title">No Investigation Run Yet</h3>
             <p class="empty-desc">
-              Select an account from the sidebar or click a benchmark below to generate a comprehensive, grounded investigation report.
+              Select a customer account from the sidebar and click Run Automated Risk Audit to generate a report.
             </p>
-            <div class="empty-quick-cards" id="empty-benchmark-container">
-              <!-- Populated dynamically via availableCustomers from /api/customers -->
-            </div>
           </div>
         </div>
 

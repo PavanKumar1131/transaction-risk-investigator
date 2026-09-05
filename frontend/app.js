@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderBenchmarkControls() {
     const sidebarContainer = document.getElementById('sidebar-benchmark-container');
-    const emptyContainer = document.getElementById('empty-benchmark-container');
 
     if (sidebarContainer) {
       sidebarContainer.innerHTML = availableCustomers.map(c => {
@@ -150,23 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="scen-badge ${meta.badgeClass}">${escapeHTML(meta.badge)}</span>
             <span class="scen-name">${escapeHTML(c.name)} &bull; ${escapeHTML(c.customer_id)}</span>
           </button>
-        `;
-      }).join('');
-    }
-
-    if (emptyContainer) {
-      emptyContainer.innerHTML = availableCustomers.map(c => {
-        const meta = BENCHMARK_METADATA[c.customer_id] || {
-          badge: c.risk_profile === 'LOW' ? 'Clean Baseline' : 'Benchmark',
-          badgeClass: c.risk_profile === 'LOW' ? 'clean' : 'alert',
-          detail: c.notes || ''
-        };
-        return `
-          <div class="benchmark-card" data-cust="${escapeHTML(c.customer_id)}">
-            <div class="b-badge ${meta.badgeClass}">${escapeHTML(meta.badge)}</div>
-            <div class="b-name">${escapeHTML(c.customer_id)} &bull; ${escapeHTML(c.name)}</div>
-            <div class="b-detail">${escapeHTML(meta.detail || c.notes || '')}</div>
-          </div>
         `;
       }).join('');
     }
@@ -264,9 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle Quick Benchmark clicks in Sidebar and Empty State
+  // Handle Quick Benchmark clicks in Sidebar
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.scenario-select-btn, .benchmark-card');
+    const btn = e.target.closest('.scenario-select-btn');
     if (btn) {
       const custId = btn.getAttribute('data-cust');
       selectCustomer(custId, true);
