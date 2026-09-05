@@ -152,40 +152,29 @@ python -m unittest discover tests
 
 ---
 
-## 8. Demo Video Walkthrough Script (2–5 Minutes)
+## 8. Demo Video
 
-1. **Introduction (0:00–0:30)**:
-   - Open `http://localhost:8000`.
-   - Highlight the header telemetry showing `PS06`, status `Online (Port 8000)`, and target model `gemini-3.5-flash-lite`.
-   - Explain the core architecture: Python computes deterministic baselines and risk rules; Gemini produces grounded explanations.
-2. **Attention-Required Case — Rule 1 (0:30–1:45)**:
-   - Click the shortcut chip **`CUST_102 (Rule 1: Outlier Wire)`**.
-   - Review Rahul Verma's profile.
-   - Click **Run Risk Investigation**.
-   - Watch the radar engine complete baseline calculation and rule evaluation.
-   - Point out:
-     - **Status Card**: `STATUS: ATTENTION REQUIRED`.
-     - **Baseline Metrics**: Historical median debit (INR 1,200.00).
-     - **Structured Finding**: Rule 1 (`UNUSUALLY_LARGE_TRANSACTION`), cited transaction `TX102_28`, ₹4,75,000 wire (over 300x median).
-     - **Grounded Narrative**: 7-section report explaining why it was flagged and what the investigator should check first.
-     - **Evidence Ledger**: `TX102_28` highlighted in crimson with rule tag.
-3. **Mandatory Clean Case (1:45–2:45)**:
-   - Click the shortcut chip **`CUST_101 (Clean Salaried)`** (Priya Sharma).
-   - Click **Run Risk Investigation**.
-   - Point out:
-     - **Status Card**: `STATUS: NO IMMEDIATE ATTENTION REQUIRED`.
-     - 0 findings manufactured; 0 flagged transactions.
-     - Explain that Priya's monthly rent of ₹25,000 is recognized as an established recurring baseline rather than an anomaly.
-     - Gemini report displays the clean 4-section format.
-4. **Additional Rule Demonstration (2:45–3:30)**:
-   - Click **`CUST_103`** (Burst to New Payee) or **`CUST_104`** (02:42 AM Odd Hours).
-   - Run investigation to showcase rapid detection across the other rules.
-5. **Conclusion (3:30–4:00)**:
-   - Summarize hackathon compliance: Single-command startup (`python app.py`), zero committed secrets, 100% deterministic traceability, and evaluation on `gemini-3.5-flash-lite`.
+See the video link on the Devfolio submission for a walkthrough of a flagged customer
+investigation (unusually large transaction) and a clean-baseline investigation (no
+attention required).
 
 ---
 
-## 9. Repository Structure
+## 9. Limitations
+
+- This system flags statistical anomalies for human review; it does not — and cannot —
+  determine that fraud has actually occurred.
+- Detection is limited to the four configured deterministic rules; it does not use
+  machine learning or behavioral modeling beyond simple baseline comparisons.
+- The dataset is synthetic and illustrative; it is not connected to a real banking core
+  system, KYC records, or external watchlists.
+- Odd-hours and channel-pattern thresholds are configured defaults and may need tuning
+  for different customer populations in a production setting.
+- Final investigative judgement always rests with a human fraud analyst.
+
+---
+
+## 10. Repository Structure
 
 ```
 /
