@@ -184,7 +184,7 @@ class TestEdgeCases(unittest.TestCase):
         res = generate_investigation_narrative(report, api_key="test-key")
         self.assertTrue(res.is_fallback)
         self.assertEqual(res.status, "FALLBACK")
-        self.assertIn("Gemini API HTTP 500", res.fallback_reason)
+        self.assertIn("AI generation failed: HTTP 500", res.fallback_reason)
         self.assertIn("Investigation Summary", res.content)
 
     @patch("urllib.request.urlopen")

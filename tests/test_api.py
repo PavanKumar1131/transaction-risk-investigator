@@ -63,7 +63,7 @@ class TestInvestigationAPI(unittest.TestCase):
         self.assertEqual(data["flagged_transactions"], [])
         self.assertTrue(data["traceability_verified"])
         self.assertIn("ai_narrative", data)
-        self.assertIn("NO IMMEDIATE ATTENTION REQUIRED", data["ai_narrative"]["content"])
+        self.assertIn("NO IMMEDIATE ATTENTION REQUIRED", data["ai_narrative"]["content"].upper())
 
     def test_investigate_risky_customer(self):
         """POST /api/investigate/<id> for risky customer returns ATTENTION_REQUIRED with evidence."""

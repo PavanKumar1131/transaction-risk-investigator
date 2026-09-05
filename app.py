@@ -16,6 +16,13 @@ from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory
 from dotenv import load_dotenv
 
+# Step 1: Ensure .env is loaded FIRST from repository root before any other imports
+ROOT_DIR = Path(__file__).resolve().parent
+ENV_FILE = ROOT_DIR / ".env"
+load_dotenv(dotenv_path=ENV_FILE, override=True)
+
+# Step 2: Import centralized config and business modules
+from src.config import get_gemini_api_key, get_gemini_model, has_gemini_api_key
 from src.data_loader import get_customer, list_customers, load_dataset
 from src.gemini_service import generate_investigation_narrative
 from src.rules_engine import investigate_customer
@@ -24,15 +31,17 @@ from src.rules_engine import investigate_customer
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-# Load environment variables from .env
-env_path = Path(__file__).resolve().parent / ".env"
-load_dotenv(dotenv_path=env_path)
+# One-line startup log (Requirement 5)
+if has_gemini_api_key():
+    logger.info("[startup] GEMINI_API_KEY detected — Gemini calls enabled (model: %s)", get_gemini_model())
+    print(f"[startup] GEMINI_API_KEY detected — Gemini calls enabled (model: {get_gemini_model()})")
+else:
+    logger.info("[startup] GEMINI_API_KEY missing/empty — running in fallback mode")
+    print("[startup] GEMINI_API_KEY missing/empty — running in fallback mode")
 
 # Configure Flask app to serve frontend static assets
-FRONTEND_DIR = Path(__file__).resolve().parent / "frontend"
+FRONTEND_DIR = ROOT_DIR / "frontend"
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
-
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 
 @app.route("/")
@@ -50,11 +59,11 @@ def serve_static(filename):
 @app.route("/api/health", methods=["GET"])
 def health_check():
     """Verify backend connectivity, track ID, and configuration."""
-    has_key = bool(os.getenv("GEMINI_API_KEY", "").strip())
+    has_key = has_gemini_api_key()
     return jsonify({
         "status": "healthy",
         "track_id": "PS06",
-        "gemini_model": os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
+        "gemini_model": get_gemini_model(),
         "host": "0.0.0.0:8000",
         "has_gemini_key": has_key,
         "mode": "Live AI" if has_key else "Deterministic Fallback",

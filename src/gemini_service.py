@@ -18,6 +18,7 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
+from src.config import get_gemini_api_key, get_gemini_model, has_gemini_api_key
 from src.report_builder import InvestigationReport
 
 logger = logging.getLogger(__name__)
@@ -191,8 +192,8 @@ def generate_investigation_narrative(
     timeout_seconds: int = 25,
 ) -> GeminiReportResult:
     """Generate grounded report narrative via Gemini API with automatic fallback."""
-    key = api_key or os.getenv("GEMINI_API_KEY", "").strip()
-    model = model_name or os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite").strip()
+    key = (api_key if api_key is not None else get_gemini_api_key()).strip()
+    model = (model_name if model_name is not None else get_gemini_model()).strip()
 
     # If key is absent, provide immediate deterministic fallback
     if not key:
@@ -244,10 +245,10 @@ def generate_investigation_narrative(
             )
     except urllib.error.HTTPError as e:
         logger.warning("Gemini API HTTP Error %d: %s", e.code, e.reason)
-        return generate_fallback_report(report, f"Gemini API HTTP {e.code}")
+        return generate_fallback_report(report, f"AI generation failed: HTTP {e.code} ({e.reason})")
     except urllib.error.URLError as e:
         logger.warning("Gemini API Network/URL Error: %s", e.reason)
-        return generate_fallback_report(report, f"Gemini network error: {e.reason}")
+        return generate_fallback_report(report, f"AI generation failed: Network error ({e.reason})")
     except Exception as e:
         logger.warning("Gemini generation failed: %s", str(e))
-        return generate_fallback_report(report, f"Gemini error: {str(e)}")
+        return generate_fallback_report(report, f"AI generation failed: {str(e)}")
