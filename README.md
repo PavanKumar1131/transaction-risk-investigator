@@ -154,9 +154,13 @@ python -m unittest discover tests
 
 ## 8. Demo Video
 
-See the video link on the Devfolio submission for a walkthrough of a flagged customer
-investigation (unusually large transaction) and a clean-baseline investigation (no
-attention required).
+Watch the complete project demonstration on YouTube:
+**[Transaction Risk Investigation Assistant — Demo Video](https://youtu.be/2-HVp9KYbKc?si=_eQO4nVR9Qid2iiE)**
+
+The walkthrough covers:
+- **Flagged Customer Investigation** (`CUST_102` — Rahul Verma): Large wire outlier triggering Rule 1 (`UNUSUALLY_LARGE_TRANSACTION`), grounded Gemini 7-section narrative, and evidence ledger trace.
+- **Clean Baseline Customer Investigation** (`CUST_101` — Priya Sharma): Consistent daytime transaction patterns triggering 0 rules (`NO IMMEDIATE ATTENTION REQUIRED`) and clean 4-section report.
+- **Deterministic Risk Rules Engine & Traceability**: How deterministic Python rules guarantee 100% factual grounding with zero hallucinations.
 
 ---
 
