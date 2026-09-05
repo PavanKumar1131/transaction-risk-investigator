@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transaction Risk Investigation Assistant &middot; PS06</title>
-  <meta name="description" content="Interactive Banking Fraud Copilot & Dossier Workspace powered by deterministic rules and grounded Gemini intelligence.">
+  <meta name="description" content="AI Fraud Desk Investigation Studio powered by deterministic risk rules and grounded Gemini intelligence.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,10 +18,10 @@
   <div class="studio-layout">
     
     <!-- ================================================================ -->
-    <!-- LEFT PANEL: Investigation Sidebar (30% width, sticky)            -->
+    <!-- LEFT PANEL: Investigation Sidebar                                -->
     <!-- ================================================================ -->
     <aside class="sidebar-panel">
-      <!-- Brand & Track Header -->
+      <!-- Brand & Platform Header -->
       <div class="sidebar-brand">
         <div class="brand-logo-lockup">
           <div class="brand-hex">
@@ -33,14 +33,14 @@
           </div>
           <div class="brand-meta">
             <div class="brand-title-wrap">
-              <h2>Transaction Risk Investigation Assistant</h2>
+              <h2>Risk Investigator</h2>
               <span class="ps-badge">PS06</span>
             </div>
-            <span class="brand-sub">Fraud Desk AI Copilot &bull; Sentinel Platform</span>
+            <span class="brand-sub">Fraud Desk AI Studio &bull; Sentinel Platform</span>
           </div>
         </div>
 
-        <!-- System Pill -->
+        <!-- System Status Pill -->
         <div class="system-status-pill" id="system-pill">
           <span class="pulse-indicator">
             <span class="pulse-dot"></span>
@@ -54,105 +54,134 @@
         </div>
       </div>
 
-      <!-- Target Customer Dossier Section -->
-      <div class="sidebar-section dossier-select-section">
-        <div class="section-heading">
-          <svg class="heading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          <h3>Customer Target Dossier</h3>
-        </div>
-
-        <div class="select-field-wrap">
-          <select id="customer-select">
-            <option value="">-- Choose Account Dossier --</option>
-          </select>
-        </div>
-
-        <!-- Dynamic Account Stats Spotlight (updated on select) -->
-        <div id="target-stats-card" class="target-stats-card hidden">
-          <div class="target-header">
-            <div class="target-avatar" id="target-avatar">PS</div>
-            <div class="target-info">
-              <h4 id="target-name">Priya Sharma</h4>
-              <span class="target-acc code-font" id="target-acc">ACC-90812341</span>
-            </div>
-            <span class="target-risk-pill" id="target-risk-pill">LOW</span>
+      <!-- Scrollable Sidebar Content -->
+      <div class="sidebar-content">
+        
+        <!-- SECTION 1: CUSTOMER SELECTION -->
+        <div class="sidebar-group">
+          <div class="group-header">
+            <span class="group-num">01</span>
+            <span class="group-title">CUSTOMER SELECTION</span>
           </div>
 
-          <div class="stats-mini-grid">
-            <div class="stat-mini">
-              <span class="stat-mini-label">Baseline Median</span>
-              <span class="stat-mini-val code-font" id="stat-target-median">INR 0.00</span>
+          <div class="select-field-wrap">
+            <label for="customer-select" class="field-label">Target Account Dossier</label>
+            <select id="customer-select">
+              <option value="">-- Choose Account Dossier --</option>
+            </select>
+          </div>
+
+          <!-- Quick Test Scenario Buttons -->
+          <div class="scenario-selector-wrap">
+            <span class="sub-label">Test Customer Benchmarks:</span>
+            <div class="scenario-btn-stack">
+              <button class="scenario-select-btn" data-cust="CUST_101">
+                <span class="scen-badge clean">Clean</span>
+                <span class="scen-name">Priya Sharma &bull; CUST_101</span>
+              </button>
+              <button class="scenario-select-btn" data-cust="CUST_102">
+                <span class="scen-badge alert">R1: Large Wire</span>
+                <span class="scen-name">Rajesh Verma &bull; CUST_102</span>
+              </button>
+              <button class="scenario-select-btn" data-cust="CUST_103">
+                <span class="scen-badge alert">R2: Payee Burst</span>
+                <span class="scen-name">Anita Patel &bull; CUST_103</span>
+              </button>
+              <button class="scenario-select-btn" data-cust="CUST_104">
+                <span class="scen-badge alert">R3: Odd Hours</span>
+                <span class="scen-name">Vikram Malhotra &bull; CUST_104</span>
+              </button>
+              <button class="scenario-select-btn" data-cust="CUST_105">
+                <span class="scen-badge alert">R4: Pattern Break</span>
+                <span class="scen-name">Sunita Rao &bull; CUST_105</span>
+              </button>
             </div>
-            <div class="stat-mini">
-              <span class="stat-mini-label">Total History</span>
-              <span class="stat-mini-val code-font" id="stat-target-count">0 txs</span>
+          </div>
+
+          <!-- Customer Dossier Stat Grid (Requirement 4) -->
+          <div id="target-stats-card" class="dossier-card hidden">
+            <div class="dossier-header">
+              <div class="dossier-avatar" id="target-avatar">PS</div>
+              <div class="dossier-info">
+                <h4 id="target-name">Priya Sharma</h4>
+                <span class="dossier-acc code-font" id="target-acc">ACC-90812341</span>
+              </div>
+              <span class="dossier-risk-pill" id="target-risk-pill">LOW RISK</span>
             </div>
-            <div class="stat-mini">
-              <span class="stat-mini-label">Active Window</span>
-              <span class="stat-mini-val" id="stat-target-hours">07:00–22:00</span>
-            </div>
-            <div class="stat-mini">
-              <span class="stat-mini-label">Dominant Channel</span>
-              <span class="stat-mini-val code-font" id="stat-target-channel">UPI / POS</span>
+
+            <!-- 2x2 Clean Small Stat Grid -->
+            <div class="dossier-stat-grid">
+              <div class="stat-grid-cell">
+                <span class="stat-cell-label">Baseline Median</span>
+                <span class="stat-cell-value code-font" id="stat-target-median">INR 0.00</span>
+              </div>
+              <div class="stat-grid-cell">
+                <span class="stat-cell-label">Total History</span>
+                <span class="stat-cell-value code-font" id="stat-target-count">0 txs</span>
+              </div>
+              <div class="stat-grid-cell">
+                <span class="stat-cell-label">Active Window</span>
+                <span class="stat-cell-value code-font" id="stat-target-hours">07:00–22:00</span>
+              </div>
+              <div class="stat-grid-cell">
+                <span class="stat-cell-label">Dominant Channel</span>
+                <span class="stat-cell-value code-font" id="stat-target-channel">UPI</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Investigation Triggers -->
-      <div class="sidebar-section triggers-section">
-        <div class="section-heading">
-          <svg class="heading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-          <h3>Investigation Triggers</h3>
+        <!-- SECTION 2: INVESTIGATION TRIGGERS (Requirement 5) -->
+        <div class="sidebar-group">
+          <div class="group-header">
+            <span class="group-num">02</span>
+            <span class="group-title">INVESTIGATION CONTROLS</span>
+          </div>
+
+          <button id="run-audit-btn" class="btn btn-primary-gradient" disabled>
+            <span class="btn-shine"></span>
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3"/>
+            </svg>
+            <span id="run-btn-label">Run Automated Risk Audit</span>
+          </button>
+
+          <div class="controls-action-stack">
+            <button id="btn-toggle-flagged-filter" class="btn btn-subtle" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              <span id="flagged-filter-label">Filter Flagged Rows</span>
+            </button>
+            <button id="btn-jump-findings" class="btn btn-subtle" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span>Jump to Risk Findings</span>
+            </button>
+          </div>
         </div>
 
-        <button id="run-audit-btn" class="btn btn-primary-gradient" disabled>
-          <span class="btn-shine"></span>
-          <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="6 3 20 12 6 21 6 3"/>
-          </svg>
-          <span id="run-btn-label">Run Automated Risk Audit</span>
-        </button>
-
-        <!-- Quick-Action Chips -->
-        <div class="quick-chips-grid">
-          <button class="action-chip" id="chip-flagged-only" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Filter Flagged Rows
-          </button>
-          <button class="action-chip" id="chip-clean-test">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Test Clean Null Case
-          </button>
-          <button class="action-chip" id="chip-explain-deviations" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Explain Deviations
-          </button>
-        </div>
       </div>
 
-      <!-- Sidebar Footer / Collapsible Reference Link -->
+      <!-- Sidebar Footer -->
       <div class="sidebar-footer">
         <button id="open-rules-modal-btn" class="rules-reference-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
-          <span>View Configured Heuristics (R01–R04)</span>
+          <span>Configured Heuristics (Rules 1–4)</span>
         </button>
-        <span class="sidebar-copyright">PS06 &middot; Python Rules &bull; Grounded Gemini</span>
+        <span class="sidebar-copyright">PS06 &bull; Python Rules &bull; Grounded Gemini</span>
       </div>
     </aside>
 
     <!-- ================================================================ -->
-    <!-- RIGHT PANEL: Investigation Workspace Stream (70% width)         -->
+    <!-- RIGHT PANEL: Persistent One-Page Report View (Requirements 1-3)  -->
     <!-- ================================================================ -->
-    <section class="workspace-panel">
+    <main class="workspace-panel">
       
-      <!-- Right Panel Header Bar -->
+      <!-- Top Workspace Toolbar -->
       <header class="workspace-header">
         <div class="header-dossier-id">
           <span class="indicator-tag">ACTIVE DOSSIER:</span>
@@ -167,93 +196,78 @@
             </svg>
             <span>Export Dossier (JSON)</span>
           </button>
-          <button id="clear-stream-btn" class="btn btn-icon-only" title="Clear Stream History">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-          </button>
         </div>
       </header>
 
-      <!-- Scrollable Conversation / Audit Stream -->
-      <div class="stream-container" id="stream-container">
+      <!-- Persistent Report Container (Replaces content on audit) -->
+      <div class="report-view-container" id="report-view-container">
         
-        <!-- Welcome Stream Greeting -->
-        <div class="stream-bubble system-welcome">
-          <div class="avatar-copilot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
-            </svg>
-          </div>
-          <div class="bubble-body">
-            <div class="bubble-header">
-              <span class="sender-name">Risk Investigation Copilot</span>
-              <span class="timestamp" id="welcome-time">Just now</span>
+        <!-- INITIAL EMPTY STATE -->
+        <div id="report-empty-state" class="empty-state-view">
+          <div class="empty-state-card">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
             </div>
-            <div class="bubble-text">
-              <p>Welcome to the <strong>PS06 Fraud Desk Workspace</strong>. I am initialized with deterministic risk evaluation logic and grounded Gemini synthesis.</p>
-              <p class="sub-hint">Select a customer account in the sidebar to review their profile, or click <strong>Run Automated Risk Audit</strong> to begin detection against Rules 1–4.</p>
-              
-              <div class="quick-scenario-bar">
-                <span class="scenario-label">Quick Jump to Test Scenarios:</span>
-                <div class="scenario-chips">
-                  <button class="scenario-chip" data-id="CUST_101">CUST_101 (Clean Salaried)</button>
-                  <button class="scenario-chip" data-id="CUST_102">CUST_102 (Rule 1: Large Outlier Wire)</button>
-                  <button class="scenario-chip" data-id="CUST_103">CUST_103 (Rule 2: Rapid Payee Burst)</button>
-                  <button class="scenario-chip" data-id="CUST_104">CUST_104 (Rule 3: 02:42 AM Odd Hours)</button>
-                  <button class="scenario-chip" data-id="CUST_105">CUST_105 (Rule 4: Pattern Break)</button>
-                </div>
+            <h3 class="empty-title">Fraud Investigation Studio</h3>
+            <p class="empty-desc">
+              Select an account from the sidebar or click a benchmark below to generate a comprehensive, grounded investigation report.
+            </p>
+            <div class="empty-quick-cards">
+              <div class="benchmark-card" data-cust="CUST_101">
+                <div class="b-badge clean">Clean Baseline</div>
+                <div class="b-name">CUST_101 &bull; Priya Sharma</div>
+                <div class="b-detail">25 routine UPI transactions, all within normal median and active hours.</div>
+              </div>
+              <div class="benchmark-card" data-cust="CUST_102">
+                <div class="b-badge alert">Rule 1 Outlier</div>
+                <div class="b-name">CUST_102 &bull; Rajesh Verma</div>
+                <div class="b-detail">Unprecedented large wire ($14,500) deviating 33.7x from historical debit median.</div>
+              </div>
+              <div class="benchmark-card" data-cust="CUST_103">
+                <div class="b-badge alert">Rule 2 Payee Burst</div>
+                <div class="b-name">CUST_103 &bull; Anita Patel</div>
+                <div class="b-detail">High velocity burst of 3 rapid transfers ($18,500 total) to new payee within 48h.</div>
+              </div>
+              <div class="benchmark-card" data-cust="CUST_104">
+                <div class="b-badge alert">Rule 3 Odd Hours</div>
+                <div class="b-name">CUST_104 &bull; Vikram Malhotra</div>
+                <div class="b-detail">High-value transaction ($6,800) initiated at 02:42 AM contrasting normal daytime hours.</div>
+              </div>
+              <div class="benchmark-card" data-cust="CUST_105">
+                <div class="b-badge alert">Rule 4 Pattern Break</div>
+                <div class="b-name">CUST_105 &bull; Sunita Rao</div>
+                <div class="b-detail">Abrupt channel switch from in-store POS card habits to large wire transfer.</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Dynamic Conversation Thread will be appended here -->
-        <div id="dynamic-thread"></div>
-
-        <!-- Real-time typing/evaluating indicator -->
-        <div id="typing-indicator" class="stream-bubble typing-bubble hidden">
-          <div class="avatar-copilot small">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- LOADING AUDIT STATE -->
+        <div id="report-loading-state" class="loading-state-view hidden">
+          <div class="loading-spinner-wrap">
+            <div class="radar-pulse"></div>
+            <svg class="loading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
             </svg>
           </div>
-          <div class="bubble-body">
-            <div class="evaluating-row">
-              <span class="evaluating-text">Executing Python risk engine &bull; Evaluating Rules 1–4 &bull; Consulting Gemini...</span>
-              <div class="dot-flashing"></div>
-            </div>
-          </div>
+          <h3 class="loading-title">Executing Risk Investigation...</h3>
+          <p class="loading-subtitle" id="loading-step-text">Evaluating deterministic rules 1–4 against transaction history...</p>
+        </div>
+
+        <!-- PERSISTENT REPORT CONTENT CANVAS (Rendered on audit) -->
+        <div id="report-content" class="report-content-canvas hidden">
+          <!-- Dynamically populated via renderInvestigationReport(report) -->
         </div>
 
       </div>
-
-      <!-- Bottom Interactive Chat Input Bar -->
-      <footer class="workspace-input-bar">
-        <div class="input-quick-prompts" id="quick-prompts">
-          <button class="prompt-pill" data-prompt="Explain why the flagged transaction deviates from baseline">Explain Deviations</button>
-          <button class="prompt-pill" data-prompt="What should the investigator check first?">Next Steps</button>
-          <button class="prompt-pill" data-prompt="Summarize customer baseline and channel habits">Baseline Summary</button>
-          <button class="prompt-pill" data-prompt="Does this account show any odd-hours activity?">Check Odd-Hours</button>
-        </div>
-
-        <form id="chat-form" class="chat-form">
-          <div class="input-container">
-            <input type="text" id="chat-input" placeholder="Ask follow-up question or probe specific transaction ID (e.g. 'Why was TX102_28 flagged?')..." autocomplete="off">
-            <button type="submit" id="chat-send-btn" class="btn-send">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            </button>
-          </div>
-        </form>
-      </footer>
-
-    </section>
+    </main>
   </div>
 
   <!-- ================================================================ -->
-  <!-- MODAL / DRAWER: Configured Heuristics Reference (R01–R04)        -->
+  <!-- MODAL: Configured Heuristics Reference (R01–R04)                  -->
   <!-- ================================================================ -->
   <div id="rules-modal" class="modal-overlay hidden">
     <div class="modal-card">
@@ -262,11 +276,11 @@
           <span class="modal-badge">PS06 SPECIFICATION</span>
           <h3>Configured Risk Heuristics Reference</h3>
         </div>
-        <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+        <button id="close-modal-btn" class="modal-close-btn" aria-label="Close modal">&times;</button>
       </div>
       
       <div class="modal-body">
-        <p class="modal-desc">Per hackathon rules, strictly these four deterministic risk rules are evaluated in Python. Gemini never decides what is suspicious.</p>
+        <p class="modal-desc">Per hackathon specification, strictly these four deterministic risk rules are evaluated in Python. Gemini never hallucinates what is suspicious.</p>
         
         <div class="heuristics-list">
           <div class="heuristic-card">
