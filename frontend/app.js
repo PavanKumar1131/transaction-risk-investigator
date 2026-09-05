@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const health = await resp.json();
 
       statusMsgEl.textContent = health.has_gemini_key ? 'Engine Ready' : 'Fallback Ready';
-      if (health.gemini_model) {
+      if (health.gemini_model && activeModelNameEl) {
         activeModelNameEl.textContent = health.gemini_model;
       }
 
